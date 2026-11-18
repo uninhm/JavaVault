@@ -1,5 +1,2 @@
-class FilePacket {
-    String name;
-    byte[] content;
-    byte[] hash; // fixed size
+record FilePacket(String name, byte[] content, String checksum) {
 }
