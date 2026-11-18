@@ -1,6 +1,4 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -11,10 +9,17 @@ import java.util.stream.Collectors;
  * on the files contained on that folder, corresponding to a user's files.
  */
 class Vault {
-    Path path;
+    private final Path path;
 
-    public Vault(Path path) {
+    public Vault(Path path) throws IOException {
         this.path = path;
+
+        if (!Files.exists(path))
+            Files.createDirectory(path);
+    }
+
+    public Path getPath() {
+        return this.path;
     }
 
     public Path getFilePath(String filename) {
@@ -25,11 +30,8 @@ class Vault {
         return Files.readAllBytes(this.getFilePath(filename));
     }
 
-    public void delete(String filename) throws IOException, FileNotFoundException {
+    public void delete(String filename) throws IOException {
         Path filepath = this.getFilePath(filename);
-
-        if (!Files.exists(filepath))
-            throw new FileNotFoundException("File '" + filename + "' not found");
 
         Files.delete(filepath);
     }
@@ -38,15 +40,14 @@ class Vault {
         return Files.list(this.path)
             .map(Path::getFileName)
             .map(Path::toString)
+            .sorted()
             .collect(Collectors.toList());
     }
 
-    public void addFile(FilePacket filePacket) throws IOException, FileAlreadyExistsException {
-        Path filepath = this.getFilePath(filePacket.name());
+    public void addFile(String filename, byte[] content) throws IOException {
+        Path filepath = this.getFilePath(filename);
 
-        if (Files.exists(filepath))
-            throw new FileAlreadyExistsException("File '" + filePacket.name() + "' already exists");
-
-        Files.write(filepath, filePacket.content());
+        Files.createFile(filepath);
+        Files.write(filepath, content);
     }
 }
