@@ -1,6 +1,8 @@
 import java.io.File;
+import java.nio.file.Path;
+
 class Vault {
-    String user;
+    Path path;
 
     public File getFile(String filename) {
         throw new UnsupportedOperationException("Unimplemented!");
