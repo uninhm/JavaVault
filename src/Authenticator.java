@@ -1,6 +1,6 @@
 class Authenticator {
     public Authenticator() {
-        throw new UnsupportedOperationException("Unimplemented!");
+        // throw new UnsupportedOperationException("Unimplemented!");
     }
 
     public void createUser(String username) {
@@ -21,6 +21,7 @@ class Authenticator {
     }
 
     public boolean checkPassword(String username, String password) {
-        throw new UnsupportedOperationException("Unimplemented!");
+        // throw new UnsupportedOperationException("Unimplemented!");
+        return true; // TODO: Implement actual password checking logic
     }
 }

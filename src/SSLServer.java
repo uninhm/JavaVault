@@ -28,21 +28,11 @@ public class SSLServer {
             System.out.println("SSL Server listening on port " + PORT);
 
             while (true) {
-                try (SSLSocket clientSocket = (SSLSocket) serverSocket.accept();
-                     DataInputStream in = new DataInputStream(new BufferedInputStream(clientSocket.getInputStream()));
-                     DataOutputStream out = new DataOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()))) {
-
-                    // Force handshake explicitly to catch TLS errors immediately
-                    clientSocket.startHandshake();
-
-                    // Read structured data from client
-                    String message = in.readUTF();
-                    int number = in.readInt();
-                    System.out.println("Received: " + message + " | " + number);
-
-                    // Send response back
-                    out.writeUTF("ACK: " + message);
-                    out.flush(); // Crucial when using BufferedOutputStream
+                try {
+                    SSLSocket clientSocket = (SSLSocket) serverSocket.accept();
+                    ClientHandler handler = new ClientHandler(clientSocket);
+                    new Thread(handler).start();
+                    System.out.println("Accepted connection from " + clientSocket.getInetAddress());
                 } catch (IOException e) {
                     System.err.println("Client connection error: " + e.getMessage());
                 }

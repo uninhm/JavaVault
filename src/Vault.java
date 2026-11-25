@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
  * on the files contained on that folder, corresponding to a user's files.
  */
 class Vault {
+    static final String VAULTS_DIR = "vaults";
+
     private final Path path;
 
     public Vault(Path path) throws IOException {
@@ -16,6 +18,10 @@ class Vault {
 
         if (!Files.exists(path))
             Files.createDirectory(path);
+    }
+    
+    public Vault(String username) throws IOException {
+        this(Path.of(VAULTS_DIR).resolve(username));
     }
 
     public Path getPath() {
